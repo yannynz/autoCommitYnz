@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>autocli</id>
+    <version>1.0.2</version>
+    <authors>SeuNome</authors>
+    <description>Package Description</description>
+    <packageTypes>
+      <packageType name="DotnetTool" />
+    </packageTypes>
+    <repository type="git" commit="654e7992bbf8bbbf5a37212bf06d3f0fea101a33" />
+  </metadata>
+  <files>
+    <file src="/home/ynz/Documentos/ACC-CLI/src/obj/DotnetToolSettings.xml" target="tools/net8.0/any/DotnetToolSettings.xml" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/ACC-CLI.dll" target="tools/net8.0/any/ACC-CLI.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/ACC-CLI.deps.json" target="tools/net8.0/any/ACC-CLI.deps.json" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/ACC-CLI.runtimeconfig.json" target="tools/net8.0/any/ACC-CLI.runtimeconfig.json" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/ACC-CLI.pdb" target="tools/net8.0/any/ACC-CLI.pdb" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/LibGit2Sharp.dll" target="tools/net8.0/any/LibGit2Sharp.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/Spectre.Console.dll" target="tools/net8.0/any/Spectre.Console.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/System.CommandLine.dll" target="tools/net8.0/any/System.CommandLine.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/cs/System.CommandLine.resources.dll" target="tools/net8.0/any/cs/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/de/System.CommandLine.resources.dll" target="tools/net8.0/any/de/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/es/System.CommandLine.resources.dll" target="tools/net8.0/any/es/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/fr/System.CommandLine.resources.dll" target="tools/net8.0/any/fr/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/it/System.CommandLine.resources.dll" target="tools/net8.0/any/it/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/ja/System.CommandLine.resources.dll" target="tools/net8.0/any/ja/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/ko/System.CommandLine.resources.dll" target="tools/net8.0/any/ko/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/pl/System.CommandLine.resources.dll" target="tools/net8.0/any/pl/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/pt-BR/System.CommandLine.resources.dll" target="tools/net8.0/any/pt-BR/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/ru/System.CommandLine.resources.dll" target="tools/net8.0/any/ru/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/tr/System.CommandLine.resources.dll" target="tools/net8.0/any/tr/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/zh-Hans/System.CommandLine.resources.dll" target="tools/net8.0/any/zh-Hans/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/zh-Hant/System.CommandLine.resources.dll" target="tools/net8.0/any/zh-Hant/System.CommandLine.resources.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/linux-arm/native/libgit2-3f4182d.so" target="tools/net8.0/any/runtimes/linux-arm/native/libgit2-3f4182d.so" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/linux-arm64/native/libgit2-3f4182d.so" target="tools/net8.0/any/runtimes/linux-arm64/native/libgit2-3f4182d.so" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/linux-musl-arm/native/libgit2-3f4182d.so" target="tools/net8.0/any/runtimes/linux-musl-arm/native/libgit2-3f4182d.so" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/linux-musl-arm64/native/libgit2-3f4182d.so" target="tools/net8.0/any/runtimes/linux-musl-arm64/native/libgit2-3f4182d.so" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/linux-musl-x64/native/libgit2-3f4182d.so" target="tools/net8.0/any/runtimes/linux-musl-x64/native/libgit2-3f4182d.so" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/linux-ppc64le/native/libgit2-3f4182d.so" target="tools/net8.0/any/runtimes/linux-ppc64le/native/libgit2-3f4182d.so" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/linux-x64/native/libgit2-3f4182d.so" target="tools/net8.0/any/runtimes/linux-x64/native/libgit2-3f4182d.so" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/osx-arm64/native/libgit2-3f4182d.dylib" target="tools/net8.0/any/runtimes/osx-arm64/native/libgit2-3f4182d.dylib" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/osx-x64/native/libgit2-3f4182d.dylib" target="tools/net8.0/any/runtimes/osx-x64/native/libgit2-3f4182d.dylib" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/win-arm64/native/git2-3f4182d.dll" target="tools/net8.0/any/runtimes/win-arm64/native/git2-3f4182d.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/win-x64/native/git2-3f4182d.dll" target="tools/net8.0/any/runtimes/win-x64/native/git2-3f4182d.dll" />
+    <file src="/home/ynz/Documentos/ACC-CLI/src/bin/Release/net8.0/publish/runtimes/win-x86/native/git2-3f4182d.dll" target="tools/net8.0/any/runtimes/win-x86/native/git2-3f4182d.dll" />
+  </files>
+</package>

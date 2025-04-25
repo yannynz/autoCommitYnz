@@ -45,7 +45,7 @@ namespace AccCli.Services
             var remote = _repo.Network.Remotes["origin"];
             var opts = new PushOptions
             {
-                CredentialsProvider = (_,_,_) =>
+                CredentialsProvider = (_, _, _) =>
                     new UsernamePasswordCredentials
                     {
                         Username = cfg.Username,
