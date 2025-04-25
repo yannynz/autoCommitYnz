@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>autocli</ToolCommandName>
+    <PackageId>autocli</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>SeuNome</Authors>
+    <PackageType>DotnetTool</PackageType>
+    <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+    <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="Spectre.Console" Version="0.50.1-preview.0.5" />
+  </ItemGroup>
+
+</Project>
+
