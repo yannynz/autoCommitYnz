@@ -49,7 +49,7 @@ sudo apt install -y dotnet-sdk-8.0
    ```bash
    sudo dotnet tool install --global \
      --add-source ./bin/Release \
-     autocli --version 1.0.3
+     autocli --version <versao atual no <Version> do .csproj>
    ```
 
 4. Garanta que `~/.dotnet/tools` esteja no seu `PATH` (adicionar em `~/.profile` se necessário):
