@@ -71,6 +71,7 @@ sudo apt install -y dotnet-sdk-8.0
    dotnet new tool-manifest
    dotnet tool install autocli --add-source ./bin/Release --version 1.0.3
    ```
+   fique atento a versão do .csprod, ela deve ser a mesma aqui neste comando.
 
 2. Execute via manifest:
    ```bash
