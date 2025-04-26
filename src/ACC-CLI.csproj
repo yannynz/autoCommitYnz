@@ -5,7 +5,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>autocli</ToolCommandName>
     <PackageId>autocli</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>SeuNome</Authors>
     <PackageType>DotnetTool</PackageType>
     <Nullable>enable</Nullable>

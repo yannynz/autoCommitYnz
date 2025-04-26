@@ -12,11 +12,11 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("SeuNome")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.2.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.2+654e7992bbf8bbbf5a37212bf06d3f0fea101a33")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.3.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.3+361de76590bdf82dc50bb4631bb905211cce3adf")]
 [assembly: System.Reflection.AssemblyProductAttribute("ACC-CLI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ACC-CLI")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.2.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.3.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.
 

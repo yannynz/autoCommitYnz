@@ -11,15 +11,15 @@ namespace AccCli
         {
             var root = new RootCommand("Auto Commit CLI – versionamento automático com SemVer");
 
-            // -- OPTIONS
+            // Opções comuns
             var usernameOpt = new Option<string>("--username", "Usuário Git (HTTPS)") { IsRequired = true };
             var passwordOpt = new Option<string>("--password", "Senha ou Personal Access Token") { IsRequired = true };
-            var minorOpt = new Option<bool>("--minor", "Incrementa a versão minor");
-            var majorOpt = new Option<bool>("--major", "Incrementa a versão major");
-            var dryRunOpt = new Option<bool>("--dry-run", "Simula execução sem alterar nada");
-            var messageOpt = new Option<string>("-m", "Mensagem de commit customizada") { IsRequired = false };
+            var minorOpt    = new Option<bool>("--minor",   "Incrementa a versão minor");
+            var majorOpt    = new Option<bool>("--major",   "Incrementa a versão major");
+            var dryRunOpt   = new Option<bool>("--dry-run","Simula execução sem alterar nada");
+            var messageOpt  = new Option<string>("-m",       "Mensagem de commit customizada");
 
-            // -- INIT COMMAND
+            // comando init
             var initCmd = new Command("init", "Cria ou atualiza as credenciais de acesso");
             initCmd.AddOption(usernameOpt);
             initCmd.AddOption(passwordOpt);
@@ -27,33 +27,34 @@ namespace AccCli
             {
                 await ConfigService.InitAsync(u, p);
             }, usernameOpt, passwordOpt);
+            root.AddCommand(initCmd);
 
-            // -- COMMIT COMMAND
+            // comando commit
             var commitCmd = new Command("commit", "Executa add, commit, tag e push SemVer");
             commitCmd.AddOption(minorOpt);
             commitCmd.AddOption(majorOpt);
             commitCmd.AddOption(dryRunOpt);
             commitCmd.AddOption(messageOpt);
-            commitCmd.SetHandler<bool, bool, bool, string?>(async (minor, major, dryRun, msg) =>
+            commitCmd.SetHandler<bool, bool, bool, string?>(async (minor, major, dry, msg) =>
             {
                 try
                 {
-                    var cfg = await ConfigService.LoadAsync();
-                    var git = new GitService();
-                    var version = VersionService.CalculateNextVersion(minor, major);
+                    var (user, pass) = await ConfigService.LoadAsync();
+                    var git         = new GitService();
+                    var version     = VersionService.CalculateNextVersion(minor, major);
 
                     LoggingService.Info($"Próxima versão: {version}");
 
-                    if (dryRun)
+                    if (dry)
                     {
-                        LoggingService.Info("[dry-run] Simulação completa. Nenhuma ação foi executada.");
+                        LoggingService.Info("Simulação (dry-run) completa. Nenhuma ação foi executada.");
                         return;
                     }
 
                     git.StageAll();
                     git.Commit(msg ?? $"Versão {version}");
                     git.Tag(version);
-                    git.Push(cfg);
+                    git.Push(user, pass, version);
 
                     Environment.ExitCode = 0;
                 }
@@ -67,14 +68,12 @@ namespace AccCli
                     LoggingService.Error($"Erro desconhecido: {ex.Message}");
                     Environment.ExitCode = 99;
                 }
-            }, minorOpt, majorOpt, dryRunOpt, messageOpt);
-
-            root.AddCommand(initCmd);
+            },
+            minorOpt, majorOpt, dryRunOpt, messageOpt);
             root.AddCommand(commitCmd);
 
             return await root.InvokeAsync(args);
         }
     }
 }
-
 
