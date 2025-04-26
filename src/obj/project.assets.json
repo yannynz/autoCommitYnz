@@ -304,7 +304,7 @@
     "/home/ynz/.nuget/packages/": {}
   },
   "project": {
-    "version": "1.0.5",
+    "version": "1.0.6",
     "restore": {
       "projectUniqueName": "/home/ynz/Documentos/ACC-CLI/src/ACC-CLI.csproj",
       "projectName": "autocli",
