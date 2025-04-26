@@ -29,7 +29,14 @@ namespace AccCli.Services
             Signature author;
             try
             {
-                author = _repo.Config.BuildSignature(DateTimeOffset.Now);
+                var local = _repo.Config.Get<string>("user.name", ConfigurationLevel.Local);
+                var global = _repo.Config.Get<string>("user.name", ConfigurationLevel.Global);
+                var name = local?.Value ?? global?.Value ?? throw new LibGit2SharpException("Missing user.name");
+                var emailLocal = _repo.Config.Get<string>("user.email", ConfigurationLevel.Local);
+                var emailGlobal = _repo.Config.Get<string>("user.email", ConfigurationLevel.Global);
+                var mail = emailLocal?.Value ?? emailGlobal?.Value ?? throw new LibGit2SharpException("Missing user.email");
+
+                author = new Signature(name, mail, DateTimeOffset.Now);
             }
             catch (LibGit2SharpException)
             {
