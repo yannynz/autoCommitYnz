@@ -26,18 +26,23 @@ namespace AccCli.Services
 
         public void Commit(string message)
         {
-            // Tenta ler user.name e user.email do config do repo (ou global)
-            var nameEntry  = _repo.Config.Get<string>("user.name");
-            var emailEntry = _repo.Config.Get<string>("user.email");
+            Signature author;
+            try
+            {
+                author = _repo.Config.BuildSignature(DateTimeOffset.Now);
+            }
+            catch (LibGit2SharpException)
+            {
+                AnsiConsole.MarkupLine("[red]Erro:[/] configure seu nome e email no Git:\n" +
+                                       "git config --global user.name \"Seu Nome\"\n" +
+                                       "git config --global user.email \"seu@email\"");
+                Environment.Exit(1);
+                return;
+            }
 
-            string authorName  = nameEntry?.Value  ?? "AutoCLI";
-            string authorEmail = emailEntry?.Value ?? "auto@cli";
-
-            var author = new Signature(authorName, authorEmail, DateTimeOffset.Now);
             _repo.Commit(message, author, author);
-
             AnsiConsole.MarkupLine(
-                $"[green]Commit criado:[/] \"{message}\" por {authorName} <{authorEmail}>");
+                $"[green]Commit criado:[/] \"{message}\" por {author.Name} <{author.Email}>");
         }
 
         public void Tag(string version)
@@ -45,9 +50,9 @@ namespace AccCli.Services
             var tagName = $"v{version}";
 
             // Reutiliza assinatura do commit
-            var nameEntry  = _repo.Config.Get<string>("user.name");
+            var nameEntry = _repo.Config.Get<string>("user.name");
             var emailEntry = _repo.Config.Get<string>("user.email");
-            string taggerName  = nameEntry?.Value  ?? "AutoCLI";
+            string taggerName = nameEntry?.Value ?? "AutoCLI";
             string taggerEmail = emailEntry?.Value ?? "auto@cli";
             var tagger = new Signature(taggerName, taggerEmail, DateTimeOffset.Now);
 
@@ -61,7 +66,7 @@ namespace AccCli.Services
             var remote = _repo.Network.Remotes["origin"];
             var opts = new PushOptions
             {
-                CredentialsProvider = (_,_,_) =>
+                CredentialsProvider = (_, _, _) =>
                     new UsernamePasswordCredentials { Username = user, Password = pass }
             };
 
