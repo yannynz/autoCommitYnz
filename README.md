@@ -42,12 +42,12 @@ sudo apt install -y dotnet-sdk-8.0
 
 2. Desinstale versões antigas (se houver):
    ```bash
-   sudo dotnet tool uninstall --global autocli || true
+   dotnet tool uninstall --global autocli || true
    ```
 
 3. Instale a nova versão:
    ```bash
-   sudo dotnet tool install --global \
+   dotnet tool install --global \
      --add-source ./bin/Release \
      autocli --version <versao atual no <Version> do .csproj>
    ```
