@@ -33,9 +33,9 @@ namespace AccCli.Services
             }
             catch (LibGit2SharpException)
             {
-                AnsiConsole.MarkupLine("[red]Erro:[/] configure seu nome e email no Git:\n" +
-                                       "git config --global user.name \"Seu Nome\"\n" +
-                                       "git config --global user.email \"seu@email\"");
+                AnsiConsole.MarkupLine("[red]Erro:[/] configure seu nome e email no Git antes de commitar:");
+                AnsiConsole.MarkupLine("  git config --global user.name  \"Seu Nome\"");
+                AnsiConsole.MarkupLine("  git config --global user.email \"seu@email\"");
                 Environment.Exit(1);
                 return;
             }
@@ -47,18 +47,21 @@ namespace AccCli.Services
 
         public void Tag(string version)
         {
+            Signature tagger;
+            try
+            {
+                // Mesma assinatura do commit
+                tagger = _repo.Config.BuildSignature(DateTimeOffset.Now);
+            }
+            catch (LibGit2SharpException)
+            {
+                // Se não tiver config, usamos mesmo fallback do Commit
+                tagger = new Signature("AutoCLI", "auto@cli", DateTimeOffset.Now);
+            }
+
             var tagName = $"v{version}";
-
-            // Reutiliza assinatura do commit
-            var nameEntry = _repo.Config.Get<string>("user.name");
-            var emailEntry = _repo.Config.Get<string>("user.email");
-            string taggerName = nameEntry?.Value ?? "AutoCLI";
-            string taggerEmail = emailEntry?.Value ?? "auto@cli";
-            var tagger = new Signature(taggerName, taggerEmail, DateTimeOffset.Now);
-
             _repo.ApplyTag(tagName, tagger, $"Tag {version}");
-
-            AnsiConsole.MarkupLine($"[green]Tag criada:[/] {tagName}");
+            AnsiConsole.MarkupLine($"[green]Tag criada:[/] {tagName} por {tagger.Name} <{tagger.Email}>");
         }
 
         public void Push(string user, string pass, string version)
