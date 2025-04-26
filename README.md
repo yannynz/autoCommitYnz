@@ -126,6 +126,10 @@ autocli commit --dry-run                # simula apenas
 6. **Push** do branch atual e da tag específica.
 
 ---
+Se caso aparecer um erro: "Erro desconhecido: not a valid reference 'refs/tags/*'"
+fique tranquilo que funcionou kkkk
+
+---
 
 ## 📄 Licença
 
