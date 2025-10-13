@@ -1,14 +1,17 @@
 {
   "version": 2,
-  "dgSpecHash": "iTs0UFxQFZc=",
+  "dgSpecHash": "0vrIYjoOc2A=",
   "success": true,
-  "projectFilePath": "/home/ynz/Documentos/ACC-CLI/src/ACC-CLI.csproj",
+  "projectFilePath": "/home/ynz/Documents/autoCommitYnz/src/ACC-CLI.csproj",
   "expectedPackageFiles": [
     "/home/ynz/.nuget/packages/libgit2sharp/0.31.0/libgit2sharp.0.31.0.nupkg.sha512",
     "/home/ynz/.nuget/packages/libgit2sharp.nativebinaries/2.0.323/libgit2sharp.nativebinaries.2.0.323.nupkg.sha512",
     "/home/ynz/.nuget/packages/spectre.console/0.50.1-preview.0.5/spectre.console.0.50.1-preview.0.5.nupkg.sha512",
     "/home/ynz/.nuget/packages/system.commandline/2.0.0-beta4.22272.1/system.commandline.2.0.0-beta4.22272.1.nupkg.sha512",
-    "/home/ynz/.nuget/packages/system.memory/4.6.3/system.memory.4.6.3.nupkg.sha512"
+    "/home/ynz/.nuget/packages/system.memory/4.6.3/system.memory.4.6.3.nupkg.sha512",
+    "/home/ynz/.nuget/packages/microsoft.netcore.app.ref/8.0.20/microsoft.netcore.app.ref.8.0.20.nupkg.sha512",
+    "/home/ynz/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.20/microsoft.aspnetcore.app.ref.8.0.20.nupkg.sha512",
+    "/home/ynz/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.20/microsoft.netcore.app.host.linux-x64.8.0.20.nupkg.sha512"
   ],
   "logs": []
 }

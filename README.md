@@ -86,7 +86,7 @@ Antes de usar, configure suas credenciais Git (HTTP/PAT) apenas uma vez:
 ```bash
 autocli init --username <seu-usuario> --password <seu-pat>
 ```
-Isso criará `~/.autocli/config.json` com permissão restrita.
+Isso criará `~/.autocli/config.json` com permissão restrita e, se o Git não possuir `user.name`/`user.email`, preencherá automaticamente usando os dados informados (ou fallbacks seguros).
 
 ---
 
@@ -96,8 +96,13 @@ Isso criará `~/.autocli/config.json` com permissão restrita.
 Cria ou atualiza o arquivo de configuração.
 
 ```bash
-autocli init --username foo --password ghp_XXXXXXXXXXXXXXXX
+autocli init --username foo \
+             --password ghp_XXXXXXXXXXXXXXXX \
+             --git-name "Foo Bar" \
+             --git-email foo@example.com
 ```
+
+Se `--git-name` ou `--git-email` não forem informados, o CLI salvará apenas usuário/senha e, quando necessário, preencherá o Git com o próprio `--username` e um e-mail `@users.noreply.github.com` gerado automaticamente. As informações fornecidas ficam registradas no `config.json` e serão reutilizadas para garantir que `autocli commit` rode com a mesma identidade.
 
 ### `autocli commit`
 Executa o fluxo completo: add → commit → tag → push.
@@ -122,7 +127,7 @@ autocli commit --dry-run                # simula apenas
 1. **Detecta** se o diretório atual é um repositório Git, caso contrário aborta com código 10.
 2. **Staging** automático de todos os arquivos.
 3. **Cálculo** da próxima versão SemVer (patch/minor/major).
-4. **Commit** com assinatura do usuário Git configurado em `user.name`/`user.email`.
+4. **Commit** com assinatura do usuário Git; se a identidade estiver ausente, o CLI reaplica o nome/e-mail definidos via `autocli init`.
 5. **Tag** anotada com `vX.Y.Z`, assinada com o mesmo usuário.
 6. **Push** do branch atual e da tag específica.
 
@@ -135,5 +140,3 @@ fique tranquilo que funcionou kkkk
 ## 📄 Licença
 
 MIT © Yann
-
-

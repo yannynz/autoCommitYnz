@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using LibGit2Sharp;
 using Spectre.Console;
 
@@ -90,6 +91,40 @@ namespace AccCli.Services
             _repo.Network.Push(remote, $"refs/tags/{tagName}", opts);
             AnsiConsole.MarkupLine($"[green]Tag enviada para remote:[/] {tagName}");
         }
+
+        public void FetchRemote(string? user, string? pass)
+        {
+            if (!_repo.Network.Remotes.Any())
+            {
+                AnsiConsole.MarkupLine("[yellow]Aviso:[/] Nenhum remote configurado. Usando tags locais.");
+                return;
+            }
+
+            var remote = _repo.Network.Remotes["origin"] ?? _repo.Network.Remotes.First();
+            var refSpecs = remote.FetchRefSpecs.Select(spec => spec.Specification).ToList();
+            var options = new FetchOptions
+            {
+                TagFetchMode = TagFetchMode.All
+            };
+
+            if (!string.IsNullOrEmpty(user) || !string.IsNullOrEmpty(pass))
+            {
+                options.CredentialsProvider = (_, _, _) => new UsernamePasswordCredentials
+                {
+                    Username = user ?? string.Empty,
+                    Password = pass ?? string.Empty
+                };
+            }
+
+            try
+            {
+                Commands.Fetch(_repo, remote.Name, refSpecs, options, null);
+                AnsiConsole.MarkupLine($"[green]Fetch realizado:[/] {remote.Name}");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[yellow]Aviso:[/] Não foi possível buscar tags remotas ({ex.Message}). Usando tags locais.");
+            }
+        }
     }
 }
-

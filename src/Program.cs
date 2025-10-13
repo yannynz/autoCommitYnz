@@ -20,13 +20,18 @@ namespace AccCli
             var messageOpt  = new Option<string>("-m",       "Mensagem de commit customizada");
 
             // comando init
-            var initCmd = new Command("init", "Cria ou atualiza as credenciais de acesso");
+            var gitNameOpt  = new Option<string?>("--git-name",  () => null, "Nome para configurar em git config --global user.name");
+            var gitEmailOpt = new Option<string?>("--git-email", () => null, "Email para configurar em git config --global user.email");
+
+            var initCmd = new Command("init", "Cria ou atualiza as credenciais de acesso e garante identidade Git");
             initCmd.AddOption(usernameOpt);
             initCmd.AddOption(passwordOpt);
-            initCmd.SetHandler<string, string>(async (u, p) =>
+            initCmd.AddOption(gitNameOpt);
+            initCmd.AddOption(gitEmailOpt);
+            initCmd.SetHandler<string, string, string?, string?>(async (u, p, gitName, gitEmail) =>
             {
-                await ConfigService.InitAsync(u, p);
-            }, usernameOpt, passwordOpt);
+                await ConfigService.InitAsync(u, p, gitName, gitEmail);
+            }, usernameOpt, passwordOpt, gitNameOpt, gitEmailOpt);
             root.AddCommand(initCmd);
 
             // comando commit
@@ -39,8 +44,10 @@ namespace AccCli
             {
                 try
                 {
-                    var (user, pass) = await ConfigService.LoadAsync();
+                    var config     = await ConfigService.LoadAsync();
                     var git         = new GitService();
+                    GitConfigService.EnsureIdentity(config.GitName, config.GitEmail, config.Username);
+                    git.FetchRemote(config.Username, config.Password);
                     var version     = VersionService.CalculateNextVersion(minor, major);
 
                     LoggingService.Info($"Próxima versão: {version}");
@@ -54,7 +61,7 @@ namespace AccCli
                     git.StageAll();
                     git.Commit(msg ?? $"Versão {version}");
                     git.Tag(version);
-                    git.Push(user, pass, version);
+                    git.Push(config.Username, config.Password, version);
 
                     Environment.ExitCode = 0;
                 }

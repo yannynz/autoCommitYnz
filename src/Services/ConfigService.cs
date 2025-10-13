@@ -14,18 +14,25 @@ namespace AccCli.Services
             ".autocli", "config.json"
         );
 
-        public static async Task InitAsync(string user, string pass)
+        public static async Task InitAsync(string user, string pass, string? gitName, string? gitEmail)
         {
             var dir = Path.GetDirectoryName(ConfigPath)!;
             Directory.CreateDirectory(dir);
 
-            var cfg  = new { Username = user, Password = pass };
+            var cfg = new ConfigModel
+            {
+                Username = user,
+                Password = pass,
+                GitName  = gitName,
+                GitEmail = gitEmail
+            };
             var json = JsonSerializer.Serialize(cfg, new JsonSerializerOptions { WriteIndented = true });
 
             try
             {
                 await File.WriteAllTextAsync(ConfigPath, json);
                 Console.WriteLine($"Configuração salva em {ConfigPath}");
+                GitConfigService.EnsureIdentity(gitName, gitEmail, user);
             }
             catch (UnauthorizedAccessException)
             {
@@ -33,9 +40,13 @@ namespace AccCli.Services
                 Console.Error.WriteLine("Tente rodar: sudo autocli init --username <user> --password <pass>");
                 Environment.Exit(1);
             }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Falha ao configurar identidade Git: {ex.Message}");
+            }
         }
 
-        public static async Task<(string Username, string Password)> LoadAsync()
+        public static async Task<ConfigData> LoadAsync()
         {
             if (!File.Exists(ConfigPath))
                 throw new InvalidOperationException("Config não encontrado. Rode 'autocli init' primeiro.");
@@ -43,8 +54,15 @@ namespace AccCli.Services
             try
             {
                 var text = await File.ReadAllTextAsync(ConfigPath);
-                var obj  = JsonSerializer.Deserialize<Dictionary<string, string>>(text)!;
-                return (obj["Username"], obj["Password"]);
+                var obj  = JsonSerializer.Deserialize<ConfigModel>(text)
+                           ?? throw new InvalidOperationException("Arquivo de configuração inválido.");
+
+                if (string.IsNullOrWhiteSpace(obj.Username) || string.IsNullOrWhiteSpace(obj.Password))
+                {
+                    throw new InvalidOperationException("Arquivo de configuração incompleto. Rode 'autocli init' novamente.");
+                }
+
+                return new ConfigData(obj.Username, obj.Password, obj.GitName, obj.GitEmail);
             }
             catch (UnauthorizedAccessException)
             {
@@ -54,6 +72,15 @@ namespace AccCli.Services
                 return default!; // não alcançado
             }
         }
+
+        public record ConfigData(string Username, string Password, string? GitName, string? GitEmail);
+
+        private class ConfigModel
+        {
+            public string Username { get; set; } = string.Empty;
+            public string Password { get; set; } = string.Empty;
+            public string? GitName { get; set; }
+            public string? GitEmail { get; set; }
+        }
     }
 }
-

@@ -11,8 +11,8 @@ namespace AccCli.Services
             using var repo = new Repository(".");
             var latestTag = repo.Tags
                 .Select(t => t.FriendlyName)
-                .Where(t => Regex.IsMatch(t, @"^v\d+\.\d+\.\d+$"))
-                .Select(t => t.Substring(1))
+                .Where(t => Regex.IsMatch(t, @"^v?\d+\.\d+(\.\d+)?$"))
+                .Select(t => t.StartsWith("v") ? t[1..] : t)
                 .OrderByDescending(v => new System.Version(v))
                 .FirstOrDefault() ?? "0.0.0";
 
@@ -56,4 +56,3 @@ namespace AccCli.Services
         }
     }
 }
-
