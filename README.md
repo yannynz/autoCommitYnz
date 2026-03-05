@@ -63,19 +63,23 @@ Sempre que houver nova versao no repositorio, atualize assim:
 
 ```bash
 cd autoCommitYnz
+git stash -u # opcional: use se houver mudancas locais nao commitadas
 git pull --rebase --tags
 ./scripts/install-linux.sh
 autocli --version
+# git stash pop # opcional: reaplica mudancas locais
 ```
 
 ### Windows (PowerShell)
 
 ```powershell
 cd autoCommitYnz
+# git stash -u # opcional: use se houver mudancas locais nao commitadas
 git pull --rebase --tags
 Set-ExecutionPolicy -Scope Process Bypass -Force
 .\scripts\install-windows.ps1
 autocli --version
+# git stash pop # opcional: reaplica mudancas locais
 ```
 
 ## Instalacao manual
@@ -175,6 +179,8 @@ e execute o `autocli commit` novamente.
   - confira usuario/PAT do `autocli init`
 - Tag ja existe:
   - sincronize com `git pull --rebase --tags` e rode de novo
+- Branch foi enviado mas tag nao:
+  - rode `git push origin refs/tags/vX.Y.Z` para enviar apenas a tag pendente
 
 ## Licenca
 

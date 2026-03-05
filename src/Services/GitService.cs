@@ -88,15 +88,16 @@ namespace AccCli.Services
                     new UsernamePasswordCredentials { Username = user, Password = pass }
             };
 
-            // 1) Push do branch atual
             string branch = _repo.Head.FriendlyName;
-            _repo.Network.Push(remote, $"refs/heads/{branch}", opts);
-            AnsiConsole.MarkupLine($"[green]Branch {branch} enviado para remote.[/]");
-
-            // 2) Push da tag específica
             var tagName = $"v{version}";
-            _repo.Network.Push(remote, $"refs/tags/{tagName}", opts);
-            AnsiConsole.MarkupLine($"[green]Tag enviada para remote:[/] {tagName}");
+            var refSpecs = new[]
+            {
+                $"refs/heads/{branch}",
+                $"refs/tags/{tagName}"
+            };
+
+            _repo.Network.Push(remote, refSpecs, opts);
+            AnsiConsole.MarkupLine($"[green]Branch {branch} e tag {tagName} enviados para remote.[/]");
         }
 
         public void EnsureBranchUpToDateWithRemote()
