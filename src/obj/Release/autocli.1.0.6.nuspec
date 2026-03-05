@@ -8,7 +8,7 @@
     <packageTypes>
       <packageType name="DotnetTool" />
     </packageTypes>
-    <repository type="git" commit="bc585e9d4af898931717f21efdf12e3454b796fc" />
+    <repository type="git" commit="e2cfac5d1d6418b93ee1e3a1d8578da089e2bc30" />
   </metadata>
   <files>
     <file src="/home/ynz/Documents/autoCommitYnz/src/obj/Release/net8.0/DotnetToolSettings.xml" target="tools/net8.0/any/DotnetToolSettings.xml" />

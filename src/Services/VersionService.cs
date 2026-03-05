@@ -6,20 +6,22 @@ namespace AccCli.Services
 {
     public static class VersionService
     {
+        private static readonly Regex SemVerTagRegex = new(@"^v?(\d+)\.(\d+)\.(\d+)$", RegexOptions.Compiled);
+
         public static string CalculateNextVersion(bool minor, bool major)
         {
             using var repo = new Repository(".");
             var latestTag = repo.Tags
-                .Select(t => t.FriendlyName)
-                .Where(t => Regex.IsMatch(t, @"^v?\d+\.\d+(\.\d+)?$"))
-                .Select(t => t.StartsWith("v") ? t[1..] : t)
-                .OrderByDescending(v => new System.Version(v))
-                .FirstOrDefault() ?? "0.0.0";
+                .Select(t => ParseTagVersion(t.FriendlyName))
+                .Where(v => v is not null)
+                .Select(v => v!)
+                .OrderByDescending(v => v)
+                .FirstOrDefault() ?? new System.Version(0, 0, 0);
 
-            var ver = new System.Version(latestTag);
+            var ver = latestTag;
             int newMajor = ver.Major;
             int newMinor = ver.Minor;
-            int newPatch = ver.Build;
+            int newPatch = ver.Build < 0 ? 0 : ver.Build;
 
             if (major)
             {
@@ -53,6 +55,19 @@ namespace AccCli.Services
             }
 
             return $"{newMajor}.{newMinor}.{newPatch}";
+        }
+
+        private static System.Version? ParseTagVersion(string tagName)
+        {
+            if (!SemVerTagRegex.IsMatch(tagName))
+            {
+                return null;
+            }
+
+            var normalized = tagName.StartsWith("v") ? tagName[1..] : tagName;
+            return System.Version.TryParse(normalized, out var parsed)
+                ? parsed
+                : null;
         }
     }
 }

@@ -48,6 +48,7 @@ namespace AccCli
                     var git         = new GitService();
                     GitConfigService.EnsureIdentity(config.GitName, config.GitEmail, config.Username);
                     git.FetchRemote(config.Username, config.Password);
+                    git.EnsureBranchUpToDateWithRemote();
                     var version     = VersionService.CalculateNextVersion(minor, major);
 
                     LoggingService.Info($"Próxima versão: {version}");

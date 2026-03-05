@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SeuNome")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.6.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.6+bc585e9d4af898931717f21efdf12e3454b796fc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.6+e2cfac5d1d6418b93ee1e3a1d8578da089e2bc30")]
 [assembly: System.Reflection.AssemblyProductAttribute("ACC-CLI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ACC-CLI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.6.0")]

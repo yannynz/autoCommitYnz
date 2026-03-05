@@ -1,142 +1,181 @@
 # ACC-CLI (Auto Commit CLI)
 
-**ACC-CLI** é uma ferramenta de linha de comando em C#/.NET 8 que automatiza o ciclo de versionamento Git seguindo o padrão Semantic Versioning (SemVer):
+**ACC-CLI** e uma ferramenta de linha de comando em C#/.NET 8 que automatiza o fluxo:
 
 - `git add .`
 - `git commit`
 - `git tag`
 - `git push`
 
-Todas as configurações e credenciais ficam em um único arquivo JSON. Ideal para uso em ambientes Linux.
+O versionamento segue SemVer (`major.minor.patch`) usando tags no formato `vX.Y.Z`.
 
----
+## Pre-requisitos
 
-## 🛠️ Pré-requisitos
+### Comuns
 
-- **Sistema**: Debian 12 (ou equivalente Linux x64 com glibc ≥ 2.31)
-- **.NET SDK**: .NET 8.0 SDK
-- **Git**: Git ≥ 2.20 instalado e configurado
+- Git `>= 2.20`
+- .NET SDK `8.0`
+- Repositorio Git com remote `origin` configurado
+- Credencial HTTPS/PAT valida para push
 
-Instale o .NET 8 no Debian 12:
+### Linux
+
+- Debian/Ubuntu recomendados (script tenta instalar .NET 8 automaticamente nesses sistemas)
+- `sudo` (se precisar instalar dependencias)
+- `wget` ou `curl` (para baixar pacote da Microsoft, quando necessario)
+
+### Windows
+
+- PowerShell 5.1+ ou PowerShell 7+
+- Git for Windows
+- .NET SDK 8.0
+
+## Instalacao (recomendada)
+
+Clone o repositorio:
+
 ```bash
-wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-sudo apt update
-sudo apt install -y dotnet-sdk-8.0
+git clone https://github.com/yannynz/autoCommitYnz.git
+cd autoCommitYnz
 ```
 
----
+### Linux
 
-## 🚀 Instalação
+```bash
+chmod +x scripts/install-linux.sh
+./scripts/install-linux.sh
+```
 
-### Empacotar e instalar como DotNet Tool global
+### Windows (PowerShell)
 
-1. No diretório raiz do projeto:
-   ```bash
-   cd ~/Documentos/ACC-CLI/src
-   dotnet restore
-   dotnet build ACC-CLI.csproj -c Release
-   dotnet pack  ACC-CLI.csproj -c Release
-   ```
-   Isso gerará `bin/Release/autocli.<versão>.nupkg`.
+```powershell
+git clone https://github.com/yannynz/autoCommitYnz.git
+cd autoCommitYnz
+Set-ExecutionPolicy -Scope Process Bypass -Force
+.\scripts\install-windows.ps1
+```
 
-2. Desinstale versões antigas (se houver):
-   ```bash
-   dotnet tool uninstall --global autocli || true
-   ```
+## Atualizacao do app instalado
 
-3. Instale a nova versão:
-   ```bash
-   dotnet tool install --global \
-     --add-source ./bin/Release \
-     autocli --version <versao atual no <Version> do .csproj>
-   ```
+Sempre que houver nova versao no repositorio, atualize assim:
 
-4. Garanta que `~/.dotnet/tools` esteja no seu `PATH` (adicionar em `~/.profile` se necessário):
-   ```bash
-   export PATH="$PATH:$HOME/.dotnet/tools"
-   source ~/.profile
-   ```
+### Linux
 
-5. Verifique:
-   ```bash
-   autocli --version
-   ```
+```bash
+cd autoCommitYnz
+git pull --rebase --tags
+./scripts/install-linux.sh
+autocli --version
+```
 
-### (Opcional) Instalação via Manifest Local
+### Windows (PowerShell)
 
-1. Dentro de `src/`:
-   ```bash
-   cd ~/Documentos/ACC-CLI/src
-   dotnet new tool-manifest
-   dotnet tool install autocli --add-source ./bin/Release --version 1.0.3
-   ```
-   fique atento a versão do .csprod, ela deve ser a mesma aqui neste comando.
+```powershell
+cd autoCommitYnz
+git pull --rebase --tags
+Set-ExecutionPolicy -Scope Process Bypass -Force
+.\scripts\install-windows.ps1
+autocli --version
+```
 
-2. Execute via manifest:
-   ```bash
-   dotnet tool run autocli -- --help
-   ```
+## Instalacao manual
 
----
+### Linux
 
-## ⚙️ Configuração
+```bash
+cd src
+dotnet restore
+dotnet build ACC-CLI.csproj -c Release
+dotnet pack ACC-CLI.csproj -c Release
 
-Antes de usar, configure suas credenciais Git (HTTP/PAT) apenas uma vez:
+dotnet tool uninstall --global autocli || true
+dotnet tool install --global --add-source ./bin/Release autocli --version 1.0.6
+```
+
+Garanta `~/.dotnet/tools` no `PATH`.
+
+### Windows (PowerShell)
+
+```powershell
+cd .\src
+dotnet restore
+dotnet build ACC-CLI.csproj -c Release
+dotnet pack ACC-CLI.csproj -c Release
+
+dotnet tool uninstall --global autocli
+dotnet tool install --global --add-source .\bin\Release autocli --version 1.0.6
+```
+
+Garanta `$HOME\.dotnet\tools` no `PATH`.
+
+## Configuracao inicial
+
+Configure credenciais uma vez:
+
 ```bash
 autocli init --username <seu-usuario> --password <seu-pat>
 ```
-Isso criará `~/.autocli/config.json` com permissão restrita e, se o Git não possuir `user.name`/`user.email`, preencherá automaticamente usando os dados informados (ou fallbacks seguros).
 
----
-
-## 📋 Comandos
-
-### `autocli init`
-Cria ou atualiza o arquivo de configuração.
+Opcionalmente defina identidade Git explicita:
 
 ```bash
-autocli init --username foo \
-             --password ghp_XXXXXXXXXXXXXXXX \
-             --git-name "Foo Bar" \
-             --git-email foo@example.com
+autocli init --username <seu-usuario> --password <seu-pat> \
+             --git-name "Seu Nome" --git-email "voce@exemplo.com"
 ```
 
-Se `--git-name` ou `--git-email` não forem informados, o CLI salvará apenas usuário/senha e, quando necessário, preencherá o Git com o próprio `--username` e um e-mail `@users.noreply.github.com` gerado automaticamente. As informações fornecidas ficam registradas no `config.json` e serão reutilizadas para garantir que `autocli commit` rode com a mesma identidade.
+Arquivo salvo em:
+
+- Linux: `~/.autocli/config.json`
+- Windows: `%USERPROFILE%\\.autocli\\config.json`
+
+## Comandos
 
 ### `autocli commit`
-Executa o fluxo completo: add → commit → tag → push.
 
-**Opções**:
-- `--minor` → incrementa versão minor (ex: 1.2.3 → 1.3.0)
-- `--major` → incrementa versão major (ex: 1.2.3 → 2.0.0)
-- `-m "msg"` → mensagem customizada de commit
-- `--dry-run` → simula sem alterar nada
+Fluxo: add -> commit -> tag -> push
+
+Opcoes:
+
+- `--minor`: incrementa `minor` e zera `patch`
+- `--major`: incrementa `major` e zera `minor`/`patch`
+- `-m "mensagem"`: mensagem customizada
+- `--dry-run`: simula sem alterar nada
+
+Exemplos:
 
 ```bash
-# Exemplo:
-autocli commit -m "Correção de bug"      # patch padrão
-autocli commit --minor                  # incrementa minor
-autocli commit --major -m "Breaking"   # incrementa major
-autocli commit --dry-run                # simula apenas
+autocli commit -m "Correcao de bug"
+autocli commit --minor
+autocli commit --major -m "Breaking change"
+autocli commit --dry-run
 ```
----
 
-## 📖 Como funciona
+## Uso em 2 maquinas (sincronizacao remota)
 
-1. **Detecta** se o diretório atual é um repositório Git, caso contrário aborta com código 10.
-2. **Staging** automático de todos os arquivos.
-3. **Cálculo** da próxima versão SemVer (patch/minor/major).
-4. **Commit** com assinatura do usuário Git; se a identidade estiver ausente, o CLI reaplica o nome/e-mail definidos via `autocli init`.
-5. **Tag** anotada com `vX.Y.Z`, assinada com o mesmo usuário.
-6. **Push** do branch atual e da tag específica.
+O `autocli commit` agora faz validacoes para evitar conflito de versao entre maquinas:
 
----
-Se caso aparecer um erro: "Erro desconhecido: not a valid reference 'refs/tags/*'"
-fique tranquilo que funcionou kkkk
+1. Executa `fetch` no remote (`origin`) incluindo `refs/tags/*`.
+2. Le a maior tag SemVer disponivel apos o fetch para calcular a proxima versao.
+3. Bloqueia execucao quando o branch local esta atrasado/divergente do upstream remoto.
 
----
+Se aparecer erro de branch atrasado/divergente, rode:
 
-## 📄 Licença
+```bash
+git pull --rebase --tags
+```
 
-MIT © Yann
+e execute o `autocli commit` novamente.
+
+## Solucao de problemas
+
+- `autocli: command not found`:
+  - Linux: adicione `~/.dotnet/tools` ao `PATH`
+  - Windows: adicione `%USERPROFILE%\\.dotnet\\tools` ao `PATH`
+- Erro de autenticacao no push:
+  - confira usuario/PAT do `autocli init`
+- Tag ja existe:
+  - sincronize com `git pull --rebase --tags` e rode de novo
+
+## Licenca
+
+MIT

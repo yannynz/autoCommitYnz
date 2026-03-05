@@ -55,6 +55,13 @@ namespace AccCli.Services
 
         public void Tag(string version)
         {
+            var tagName = $"v{version}";
+            if (_repo.Tags[tagName] is not null)
+            {
+                throw new InvalidOperationException(
+                    $"A tag '{tagName}' já existe no repositório. Sincronize com o remoto e execute novamente.");
+            }
+
             Signature tagger;
             try
             {
@@ -67,14 +74,14 @@ namespace AccCli.Services
                 tagger = new Signature("AutoCLI", "auto@cli", DateTimeOffset.Now);
             }
 
-            var tagName = $"v{version}";
             _repo.ApplyTag(tagName, tagger, $"Tag {version}");
             AnsiConsole.MarkupLine($"[green]Tag criada:[/] {tagName} por {tagger.Name} <{tagger.Email}>");
         }
 
         public void Push(string user, string pass, string version)
         {
-            var remote = _repo.Network.Remotes["origin"];
+            var remote = _repo.Network.Remotes["origin"]
+                         ?? throw new InvalidOperationException("Remote 'origin' não foi encontrado.");
             var opts = new PushOptions
             {
                 CredentialsProvider = (_, _, _) =>
@@ -92,6 +99,40 @@ namespace AccCli.Services
             AnsiConsole.MarkupLine($"[green]Tag enviada para remote:[/] {tagName}");
         }
 
+        public void EnsureBranchUpToDateWithRemote()
+        {
+            if (_repo.Info.IsHeadDetached || _repo.Head.Tip is null)
+            {
+                AnsiConsole.MarkupLine("[yellow]Aviso:[/] HEAD destacado ou sem commits. Ignorando validação remota.");
+                return;
+            }
+
+            var trackedBranch = _repo.Head.TrackedBranch;
+            if (trackedBranch?.Tip is null)
+            {
+                AnsiConsole.MarkupLine("[yellow]Aviso:[/] Branch atual sem upstream remoto configurado.");
+                return;
+            }
+
+            var divergence = _repo.ObjectDatabase.CalculateHistoryDivergence(_repo.Head.Tip, trackedBranch.Tip);
+            var behindBy = divergence?.BehindBy ?? 0;
+            var aheadBy = divergence?.AheadBy ?? 0;
+
+            if (behindBy > 0 && aheadBy > 0)
+            {
+                throw new InvalidOperationException(
+                    $"Seu branch local divergiu de '{trackedBranch.FriendlyName}' " +
+                    $"(ahead {aheadBy}, behind {behindBy}). Rode 'git pull --rebase' e resolva conflitos antes do autocli.");
+            }
+
+            if (behindBy > 0)
+            {
+                throw new InvalidOperationException(
+                    $"Seu branch local está {behindBy} commit(s) atrás de '{trackedBranch.FriendlyName}'. " +
+                    "Rode 'git pull --rebase' antes do autocli para evitar versão duplicada.");
+            }
+        }
+
         public void FetchRemote(string? user, string? pass)
         {
             if (!_repo.Network.Remotes.Any())
@@ -102,6 +143,16 @@ namespace AccCli.Services
 
             var remote = _repo.Network.Remotes["origin"] ?? _repo.Network.Remotes.First();
             var refSpecs = remote.FetchRefSpecs.Select(spec => spec.Specification).ToList();
+            if (!refSpecs.Any())
+            {
+                refSpecs.Add($"+refs/heads/*:refs/remotes/{remote.Name}/*");
+            }
+
+            if (!refSpecs.Any(spec => spec.Contains("refs/tags/*", StringComparison.Ordinal)))
+            {
+                refSpecs.Add("+refs/tags/*:refs/tags/*");
+            }
+
             var options = new FetchOptions
             {
                 TagFetchMode = TagFetchMode.All
