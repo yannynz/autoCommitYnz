@@ -185,3 +185,7 @@ e execute o `autocli commit` novamente.
 ## Licenca
 
 MIT
+
+## Apoio
+
+nos mesmo
